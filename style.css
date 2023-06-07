@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 50px;
+    background-color: lightgray;
+}
+header {
+    background-color: gray;
+    padding: 20px 30px;
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+#komputer-specs {
+    font-size: x-small;
+}
+.container {
+    display: flex;
+    background-color: white;
+   
+}
+
+.box  {
+   flex: 1;
+    background-color: white;
+    border-radius: 8px;
+    border-style:solid;
+    border-color:black;
+    margin: 20px;
+    padding: 20px 20px;
+    box-shadow: 10px 10px black;
+    
+   
+}
+
+#komputerdisplaybox {
+       display: flex;
+       flex: 1;
+    background-color: white;
+    border-radius: 8px;
+    border-style:solid;
+    border-color:black;
+    margin: 20px;
+    padding: 20px 50px;
+    box-shadow: 10px 10px black;
+    justify-content: space-around;
+
+   
+
+}
+
+.buttoncontainer {
+  
+    display: flex;
+    justify-content: space-evenly;
+    
+    }
+button {
+    width: 45%;
+    margin: 5px;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+#komputer-description,
+#komputer-image,#komputer-purchase  {
+    flex: 1;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+#komputer-purchase {
+    display: flex;
+    flex-direction: column;
+
+   
+
+      
+    }
+#komputer-price {
+    
+}
+#komputer-purchase-btn {
+  height: 35%;
+  background-color: rgb(235, 183, 28);
+
+}
+
+
+
+
+
+
+
+
