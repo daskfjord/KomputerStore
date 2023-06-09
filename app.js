@@ -236,8 +236,11 @@ const formatCurrency = (number) => {
 
 function populateList() // fills out dropdownmenu
 {                       
-    console.log("This used to work");                                    
-    laptopListElement.innerHTML="";     // empties list
+                              
+   // laptopListElement.innerHTML="";     // empties list
+   laptopListElement.innerHTML = `<option disabled selected>Select a laptop</option>`; 
+   // Makes disabled option default, instead of simply emptying list
+   
     for (const laptop of laptopList)    // iterate through every laptop
     {
         laptopListElement.innerHTML+=`<option>${laptop.title}</option>`;
