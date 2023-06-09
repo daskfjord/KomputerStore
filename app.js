@@ -1,5 +1,9 @@
-// NEXT REVISION: UPDATE WITH BANK.JS AND WORK.JS (and LAPTOP.JS, but less urgent) FOR READABILITY
-// AND TO HIDE VARIABLES HANDLING PAY TO MAKE THEM INACCESSIBLE OUTSIDE USE OF FUNCTIONS
+// FUTURE REVISIONS: 
+// -- UPDATE WITH BANK.JS AND WORK.JS (and LAPTOP.JS, but less urgent) FOR READABILITY + untouchable variables
+// -- make sure to add functions for handling pay and bank balance, not locally changing variables
+// -- remove default choice in laptoplist OR make sure it displays in laptopdisplay as default pick
+// -- STYLE: Format "Balance", "Outstanding loan" and "Pay" so labels gets pulled left, values pulled right.
+// -- STYLE: OPTIONAL: Give boxes static pixel height to avoid them expanding when new buttons are made visible
 
 const LAPTOP_API_URL = "https://hickory-quilled-actress.glitch.me/computers";   // json data URL
 const BASE_URL = "https://hickory-quilled-actress.glitch.me/";                  // base url. for adding image path
@@ -71,53 +75,57 @@ function purchaseKomputer() // checks if you have enough in bankBalance to buy c
     }
 }
 
-function updateRepayLoanButtonVisibility(isVisible) {
+function updateRepayLoanButtonVisibility(isVisible) { // toggles Repay Loan button on / off using bool
         if(isVisible) {
-        repayLoanButtonElement.style.display='block';
+        repayLoanButtonElement.style.display='block'; // if visible, make this a block element
     }
         else
     {
-        repayLoanButtonElement.style.display='none';
+        repayLoanButtonElement.style.display='none'; // if not, turn off display
     }
 
 }
 
 function getLoanPrompt() {
   
-    if (!hasLoan) {
-        let askedLoan = parseInt(prompt("How much would you like to loan?"));
+    if (!hasLoan) // If you DON'T have a loan, run all this code
+    { 
+        let askedLoan = parseInt(prompt("How much would you like to loan?")); //parseInt forces returned number to be integer
         let maxLoan = (bankBalance * 2); // maximum loan amount = twice your current bank balance
        // NEXT REVISION: update with switch-statement instead of several if-sentences.
         if (askedLoan <= 0 ){ // break if requested amount is zero or less.
             alert("Requested loan has to be larger than 0.");
-            return;
+            return; // return from function
         }
-        if (isNaN(askedLoan)) { // if anything else than a number is added
+        if (isNaN(askedLoan)) { // if anything else than a number is added, such as text
             alert("Please enter a valid number.");
             return;
         } 
-        if (askedLoan > maxLoan) {
+        if (askedLoan > maxLoan) { // if you ask for a loan larger than maximum loan of 2* bank balance
             alert(`You can apply for a maximum loan of twice your balance of ${bankBalance}, which in your case would be ${maxLoan}`);
-    
+            // gives you your balance and max possible loan for the mathematically impaired
         }
-        else
+        else    // if loan you ask for is within range:
        { 
-         hasLoan = true;
-         outstandingLoan = askedLoan;
-            updateBankBalance(outstandingLoan);
+         hasLoan = true;    // bool that flags as true as you now have an active loan
+         outstandingLoan = askedLoan;   // you get the loan you asked for
+            updateBankBalance(outstandingLoan); // adds loan to your bank account
 
         }
-    } else {
+    } else { // I've used way too many if/else-statements here, and could do with a switch.
+             // however: This "else" is triggered if you DO have a loan (= if not !hasLoan, double neg parameter)
         alert("You have to pay outstanding loan before asking for new one!");
     }
 }
 
 function updateBankBalance(amount) {    // updates bankBankbalance with an amount (can be + or -)
     bankBalance += amount;  // increase bankBalance by Amount
-    bankBalanceElement.innerText = `Balance: ${bankBalance}` // update display of balance
+    const formattedBankBalance = formatCurrency(bankBalance); // adds prefix KR, drops decimals
+    bankBalanceElement.innerText = `Balance: ${formattedBankBalance}` // update display of balance
     if (outstandingLoan>0) { // if you have a loan (greater than and not including 0) ....
+        const formattedOutstandingLoan = formatCurrency(outstandingLoan); // converts to no decimals + NOK
         outstandingLoanElement.style.display='block'; // turn this block visible if there's a loan
-        outstandingLoanElement.innerHTML = `Outstanding Loan: <span id="redword">${outstandingLoan}</span>` 
+        outstandingLoanElement.innerHTML = `Outstanding Loan: <span id="redword">${formattedOutstandingLoan}</span>` 
         // update with text. span element gives #redword tag, which is defined in style.css as .. being red
     } else {
         outstandingLoanElement.style.display='none'; // turn of display of "outstanding loan" text if there is none
@@ -126,11 +134,14 @@ function updateBankBalance(amount) {    // updates bankBankbalance with an amoun
 
 function movePayToBankBalance() // moves (adds) current pay to bank balance, reseting pay amount in work
 { 
+    if(currentPay>0) { // makes sure you have something to transfer before triggering below code
     updateBankBalance(currentPay);  // uppdates bankBalance variable with + currentPay
    currentPay=0;                    // resets currentPay
    updatePayElement();              // displays changes on webpage
     updateRepayLoanButtonVisibility(false); // turns off "repay button" element as you're now empty
-    
+} else {
+    alert("No money to transfer! Get to work!");
+}
 }
 
 function payBackAllCurrentPay() {   
@@ -176,7 +187,8 @@ function moveAmountToBankLoan(amount) { // deduct an amount from outstanding loa
     updateBankBalance(0);   // changes amount by zero in bank balance, but this function also calls display update
 }
 function updatePayElement() {   // makes sure your current pay balance shows
-    payElement.innerText = `Pay: ${currentPay}`;    
+    const currentPayFormatted = formatCurrency(currentPay);
+    payElement.innerText = `Pay: ${currentPayFormatted}`;    
 }
 function addPay() {
     if (!hasLoan) {         // if you don't have a loan
@@ -204,9 +216,27 @@ function updateDisplayVisibility(isVisible) // updates Laptop Display-window by 
     }
 }
 
+function formatCurrency(number) {   // formats currency
+    const formatter = new Intl.NumberFormat('nb-NO', {  // full disclosure, this is more or less copypasted from the web
+        style: 'currency',                              // which feels dirty, but come on. To show I get it:
+        currency: 'NOK',                                // Intl.NumberFormat is a constructor
+        maximumFractionDigits: 0,                       // and this is the only thing I changed in the code, dropping digits
+    });
+    return formatter.format(number);                    // returns the new formated number without Decimals, but with prefix KR
+}
+
+/* I have consequently used traditional declaration of functions here, as I currently find them more
+readable at a glance. And when I first started, I kind of wanted to keep the code consistent.
+However, to show that I get how they work and to impress the teacher, this is how I would write it:
+const formatCurrency = (number) => {
+    [...rest of code, which is similar]
+    what this does (holy smoke, I can't believe I'm writing this, but here we go):
+    formatCurrency returns a const, it takes a parameter ("number"). Yep that's it.
+} */
 
 function populateList() // fills out dropdownmenu
-{                                                           
+{                       
+    console.log("This used to work");                                    
     laptopListElement.innerHTML="";     // empties list
     for (const laptop of laptopList)    // iterate through every laptop
     {
@@ -237,8 +267,8 @@ function handleLaptopChoice(event) // function reacts to laptop being chosen fro
     const fullLaptopImgUrl = BASE_URL+newLaptop.image;  // generates a full URL using base url + image path
          laptopImageElement.innerHTML=`<img src ="${fullLaptopImgUrl}" alt = "Image of ${currentLaptopTitle}" width = "200"></img>`;
          // updates with image data from api, and adds alt text for accessibility and/or if image link is broken/empty
-  
-        komputerPriceElement.innerHTML = `<h4>Price: ${currentLaptopPrice}</h4>`;   // shows price in h4 heading
+        const formattedCurrentLaptopPrice = formatCurrency(currentLaptopPrice); // formats number with KR, no decimals
+        komputerPriceElement.innerHTML = `<h4>Price: ${formattedCurrentLaptopPrice}</h4>`;   // shows price in h4 heading
         
         
     updateDisplayVisibility(true);                      // displays the laptop display and purchase button
@@ -250,6 +280,7 @@ function fetchLaptopAPIURL () {                         // fetches jsondata from
         .then(json => { laptopList = json;              // then fill empty array laptopList with this json data
                         populateList();})               // run function that populates list (using laptopList)
         .catch(error => {console.log(error.message)});  // alternatively, logs error message to console
+
 }
 
 // Actions
