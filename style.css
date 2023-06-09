@@ -35,8 +35,8 @@ header {
 }
 
 #komputerdisplaybox {
-       display: flex;
-       flex: 1;
+    display: flex;
+    flex: 1;
     background-color: white;
     border-radius: 8px;
     border-style:solid;
@@ -53,7 +53,6 @@ header {
 .buttoncontainer {
   
     display: flex;
-   
     justify-content: space-evenly;
     align-self: flex-end;
     
@@ -91,6 +90,9 @@ button {
 
 }
 
+#redword {
+    color: red;
+}
 
 
 
