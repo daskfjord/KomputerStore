@@ -1,6 +1,8 @@
 const LAPTOP_API_URL = "https://hickory-quilled-actress.glitch.me/computers";
 const BASE_URL = "https://hickory-quilled-actress.glitch.me/";
 let currentPay = 0; // move this to hidden
+let bankBalance = 0;
+let outstandingLoan = 0;
 
 // Elements
 // laptop elements
@@ -10,6 +12,7 @@ const laptopSpecsElement = document.getElementById("komputer-specs");
 const laptopImageElement = document.getElementById("komputer-image");
 // Bank elements
 const getLoanButtonElement = document.getElementById("btn-get-loan");
+const bankBalanceElement = document.getElementById("bank-balance");
 
 // Work Elements
 const bankButtonElement = document.getElementById("btn-bank");
@@ -44,8 +47,26 @@ function updateButtonVisibility(isVisible) {
 }
 
 function getLoanPrompt() {
-    const askedLoan = prompt("How much would you like to loan?");
-    // return this
+  
+    let askedLoan = prompt("How much would you like to loan?");
+    let maxLoan = (currentPay * 2);
+    console.log("maxLoan:" + maxLoan);
+    console.log("currentPay" + currentPay);
+    console.log("askedLoan" + askedLoan);
+
+    if (askedLoan > maxLoan) {alert("You can apply for a maximum loan of twice your balance of " + currentPay +", which in your case would be " + maxLoan + "!");}
+    else
+    { outstandingLoan = askedLoan;
+        updateBankBalance(outstandingLoan);
+
+    }
+}
+
+function updateBankBalance(amount) {
+    bankBalance += amount;
+    bankBalanceElement.innerText = `Balance: ${bankBalance}`
+    console.log(bankBalance);
+
 }
 
 function addPay() {
@@ -87,6 +108,7 @@ function handleLaptopChoice(event) {
     const fullLaptopImgUrl = BASE_URL+newLaptop.image;
          laptopImageElement.innerHTML=`<img src ="${fullLaptopImgUrl}" alt = "Image of ${newLaptop.title}" width = "200"></img>`;
   
+        komputerPriceElement.innerHTML = `<h4>Price: ${newLaptop.price}</h4>`;
     updateDisplayVisibility(true);
 }
 

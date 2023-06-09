@@ -21,6 +21,8 @@ header {
 
 .box  {
    flex: 1;
+ 
+ 
     background-color: white;
     border-radius: 8px;
     border-style:solid;
@@ -28,7 +30,7 @@ header {
     margin: 20px;
     padding: 20px 20px;
     box-shadow: 10px 10px black;
-    
+
    
 }
 
@@ -51,7 +53,9 @@ header {
 .buttoncontainer {
   
     display: flex;
+   
     justify-content: space-evenly;
+    align-self: flex-end;
     
     }
 button {
@@ -59,6 +63,7 @@ button {
     margin: 5px;
     padding: 8px;
     border-radius: 10px;
+    
 }
 
 #komputer-description,
