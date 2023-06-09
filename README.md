@@ -18,3 +18,5 @@ should be seperated into:
 app.js, bank.js (handling bank elements), work.js (handling work elements), and laptop.js (handling laptop elements),
 then imported. "Sensetive bank information" should be handled by functions, not inline code - will be deducted 1 point if this isn't added.
 Last update friday night 21.30 or so
+
+NOTE: commits are in master branch, not in main. https://github.com/daskfjord/KomputerStore/tree/master
